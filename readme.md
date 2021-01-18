@@ -4,18 +4,18 @@
 
 <h1 align="center">dotz</h1>
 
-<h3 align="center">GPU-accelerated Particle Terrains in ~3kB</h3>
+<h3 align="center">GPU-accelerated Particle Terrains</h3>
 
 <div align="center">
   <a href="https://npmjs.org/package/dotz">
     <img src="https://badgen.now.sh/npm/v/dotz" alt="version" />
   </a>
   <a href="https://bundlephobia.com/result?p=dotz">
-    <img src="https://img.badgesize.io/MarshallCB/dotz/main/es.js?compression=brotli" alt="install size" />
+    <img src="https://img.badgesize.io/MarshallCB/dotz/main/es.js?compression=brotli&color=1A5" alt="download size" />
   </a>
 </div>
 
-<p align="center">:construction: Work in progress :construction:</p>
+<h2 align="center">:construction: Work in progress :construction:</h2>
 
 # Example
 
