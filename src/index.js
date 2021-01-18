@@ -1,5 +1,7 @@
-import { drawVert, drawFrag, quadVert, screenFrag, updateFrag} from './shaders'
+import { drawVert, drawFrag, quadVert, screenFrag, updateFrag} from './shaders.min'
 import { createShader, createProgram, createTexture, bindTexture, createBuffer, bindAttribute, bindFramebuffer} from './utils'
+
+
 
 const terrains = new Map()
 
@@ -13,7 +15,36 @@ const terrains = new Map()
  * - Listen for window resize
  */
 
+function polyfill(){
+  if (!('createImageBitmap' in window)) {
+    window.createImageBitmap = (data) => new Promise((res, rej) => {
+      let dataURL;
+      if (data instanceof Blob) {
+        dataURL = URL.createObjectURL(data);
+      } else if (data instanceof Image) {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = data.width;
+        canvas.height = data.height;
+        ctx.drawImage(data, 0, 0);
+        dataURL = canvas.toDataURL();
+      } else {
+        rej("createImageBitmap can't use the given image type")
+      }
+      const img = new Image();
+      img.onload = function() {
+        res(this);
+        if (data instanceof Blob) {
+          URL.revokeObjectURL(data)
+        }
+      }
+      img.src = dataURL;
+    })
+  }
+}
+
 export function dotz(canvas, terrain, options){
+  polyfill()
   canvas.width = canvas.clientWidth;
   canvas.height = canvas.clientHeight;
   let gl = canvas.getContext('webgl', {antialiasing: false})
@@ -98,18 +129,21 @@ class WindGL{
 
   set colors(colors){
     this._colors = colors
-    var colorCanvas = document.createElement("canvas");
-    var ctx = colorCanvas.getContext("2d");
+    let colorCanvas = document.createElement("canvas");
     colorCanvas.width = 16;
-    colorCanvas.height = 1
+    colorCanvas.height = 1;
+    var ctx = colorCanvas.getContext("2d");
     var gradient = ctx.createLinearGradient(0, 0, 16, 0);
     for (var stop in colors) {
-      gradient.addColorStop(Number(stop), colors[stop]);
+      gradient.addColorStop(+stop, colors[stop]);
     }
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, 16, 1);
     let colorData = new Uint8Array(ctx.getImageData(0, 0, 16, 1).data);
     this.colorRampTexture = createTexture(this.gl, this.gl.LINEAR, colorData, 4, 4);
+    colorCanvas.width = 0;
+    colorCanvas.height = 0;
+    colorCanvas.remove()
   }
   get colors(){
     return this._colors;
@@ -122,15 +156,18 @@ class WindGL{
     }
     else {
       const windImage = new Image();
-      const again = this.setTerrain
-      windImage.src = url;
-      windImage.onload = function(){
+      const again = this.setTerrain;
+      let load = function(){
+
         createImageBitmap(this).then(res => {
           terrains.set(url, res);
           // first if statement will be true now
           again(url)
         });
       };
+      windImage.onload = load; 
+      windImage.src = url;
+      if(windImage.complete) load.call(windImage)
     }
   }
 

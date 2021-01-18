@@ -1,4 +1,6 @@
-let drawVert = `
+const glsl = x => x;
+
+let drawVert=glsl`
   precision mediump float;
   attribute float a_index;
   uniform sampler2D u_particles;
@@ -10,7 +12,6 @@ let drawVert = `
       floor(a_index / u_particles_res) / u_particles_res)
     );
 
-    // decode current particle position from the pixel's RGBA value
     v_particle_pos = vec2(
       color.r / 255.0 + color.b,
       color.g / 255.0 + color.a
@@ -21,7 +22,7 @@ let drawVert = `
   }
 `;
 
-let drawFrag = `
+let drawFrag=glsl`
   precision mediump float;
   uniform sampler2D u_wind;
   uniform vec2 u_wind_min;
@@ -31,7 +32,7 @@ let drawFrag = `
   void main() {
     vec2 velocity = mix(u_wind_min, u_wind_max, texture2D(u_wind, v_particle_pos).rg);
     float speed_t = length(velocity) / length(u_wind_max);
-    // color ramp is encoded in a 4x4 texture
+    
     vec2 ramp_pos = vec2(
       fract(4.0 * speed_t),
       floor(4.0 * speed_t) / 4.0
@@ -40,7 +41,7 @@ let drawFrag = `
   }
 `;
 
-let quadVert = `
+let quadVert=glsl`
   precision mediump float;
   attribute vec2 a_pos;
   varying vec2 v_tex_pos;
@@ -50,19 +51,19 @@ let quadVert = `
   }
 `;
 
-let screenFrag = `
+let screenFrag=glsl`
   precision mediump float;
   uniform sampler2D u_screen;
   uniform float u_opacity;
   varying vec2 v_tex_pos;
   void main() {
     vec4 color = texture2D(u_screen, 1.0 - v_tex_pos);
-    // a hack to guarantee opacity fade out even with a value close to 1.0
+    
     gl_FragColor = vec4(floor(255.0 * color * u_opacity) / 255.0);
   }
 `;
 
-let updateFrag = `
+let updateFrag=glsl`
   precision highp float;
   uniform sampler2D u_particles;
   uniform sampler2D u_wind;
@@ -74,44 +75,31 @@ let updateFrag = `
   uniform float u_drop_rate;
   uniform float u_drop_rate_bump;
   varying vec2 v_tex_pos;
-  // pseudo-random generator
   const vec3 rand_constants = vec3(12.9898, 78.233, 4375.85453);
+
   float rand(const vec2 co) {
     float t = dot(rand_constants.xy, co);
     return fract(sin(t) * (rand_constants.z + t));
   }
-  // wind speed lookup; use manual bilinear filtering based on 4 adjacent pixels for smooth interpolation
   vec2 lookup_wind(const vec2 uv) {
-    // return texture2D(u_wind, uv).rg; // lower-res hardware filtering
-    vec2 px = 1.0 / u_wind_res;
-    vec2 vc = (floor(uv * u_wind_res)) * px;
-    vec2 f = fract(uv * u_wind_res);
-    vec2 tl = texture2D(u_wind, vc).rg;
-    vec2 tr = texture2D(u_wind, vc + vec2(px.x, 0)).rg;
-    vec2 bl = texture2D(u_wind, vc + vec2(0, px.y)).rg;
-    vec2 br = texture2D(u_wind, vc + px).rg;
-    return mix(mix(tl, tr, f.x), mix(bl, br, f.x), f.y);
+    return texture2D(u_wind, uv).rg;
   }
   void main() {
     vec4 color = texture2D(u_particles, v_tex_pos);
     vec2 pos = vec2(
     color.r / 255.0 + color.b,
-    color.g / 255.0 + color.a); // decode particle position from pixel RGBA
+    color.g / 255.0 + color.a);
 
     vec2 velocity = mix(u_wind_min, u_wind_max, lookup_wind(pos));
     float speed_t = length(velocity) / length(u_wind_max);
 
-    // take EPSG:4236 distortion into account for calculating where the particle moved
     float distortion = cos(radians(pos.y * 180.0 - 90.0));
     vec2 offset = vec2(velocity.x / distortion, -velocity.y) * 0.0001 * u_speed_factor;
 
-    // update particle position, wrapping around the date line
     pos = fract(1.0 + pos + offset);
 
-    // a random seed to use for the particle drop
     vec2 seed = (pos + v_tex_pos) * u_rand_seed;
 
-    // drop rate is a chance a particle will restart at random position, to avoid degeneration
     float drop_rate = u_drop_rate + speed_t * u_drop_rate_bump;
     float drop = step(1.0 - drop_rate, rand(seed));
 
@@ -120,7 +108,6 @@ let updateFrag = `
     rand(seed + 2.1));
     pos = mix(pos, random_pos, drop);
 
-    // encode the new particle position back into RGBA
     gl_FragColor = vec4(
     fract(pos * 255.0),
     floor(pos * 255.0) / 255.0);
@@ -222,7 +209,36 @@ const terrains = new Map();
  * - Listen for window resize
  */
 
+function polyfill(){
+  if (!('createImageBitmap' in window)) {
+    window.createImageBitmap = (data) => new Promise((res, rej) => {
+      let dataURL;
+      if (data instanceof Blob) {
+        dataURL = URL.createObjectURL(data);
+      } else if (data instanceof Image) {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = data.width;
+        canvas.height = data.height;
+        ctx.drawImage(data, 0, 0);
+        dataURL = canvas.toDataURL();
+      } else {
+        rej("createImageBitmap can't use the given image type");
+      }
+      const img = new Image();
+      img.onload = function() {
+        res(this);
+        if (data instanceof Blob) {
+          URL.revokeObjectURL(data);
+        }
+      };
+      img.src = dataURL;
+    });
+  }
+}
+
 function dotz(canvas, terrain, options){
+  polyfill();
   canvas.width = canvas.clientWidth;
   canvas.height = canvas.clientHeight;
   let gl = canvas.getContext('webgl', {antialiasing: false});
@@ -307,18 +323,21 @@ class WindGL{
 
   set colors(colors){
     this._colors = colors;
-    var colorCanvas = document.createElement("canvas");
-    var ctx = colorCanvas.getContext("2d");
+    let colorCanvas = document.createElement("canvas");
     colorCanvas.width = 16;
     colorCanvas.height = 1;
+    var ctx = colorCanvas.getContext("2d");
     var gradient = ctx.createLinearGradient(0, 0, 16, 0);
     for (var stop in colors) {
-      gradient.addColorStop(Number(stop), colors[stop]);
+      gradient.addColorStop(+stop, colors[stop]);
     }
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, 16, 1);
     let colorData = new Uint8Array(ctx.getImageData(0, 0, 16, 1).data);
     this.colorRampTexture = createTexture(this.gl, this.gl.LINEAR, colorData, 4, 4);
+    colorCanvas.width = 0;
+    colorCanvas.height = 0;
+    colorCanvas.remove();
   }
   get colors(){
     return this._colors;
@@ -332,14 +351,17 @@ class WindGL{
     else {
       const windImage = new Image();
       const again = this.setTerrain;
-      windImage.src = url;
-      windImage.onload = function(){
+      let load = function(){
+
         createImageBitmap(this).then(res => {
           terrains.set(url, res);
           // first if statement will be true now
           again(url);
         });
       };
+      windImage.onload = load; 
+      windImage.src = url;
+      if(windImage.complete) load.call(windImage);
     }
   }
 
