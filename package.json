@@ -1,0 +1,45 @@
+{
+  "version": "0.0.1",
+  "name": "dotz",
+  "umd:name": "dotz",
+  "repository": "MarshallCB/dotz",
+  "description": "GPU-accelerated Particle Terrains",
+  "keywords": [],
+  "license": "MIT",
+  "author": {
+    "name": "Marshall Brandt",
+    "email": "hey@m4r.sh",
+    "url": "https://m4r.sh"
+  },
+  "unpkg": "dist/index.min.js",
+  "module": "dist/index.mjs",
+  "main": "dist/index.js",
+  "types": "types/index.d.ts",
+  "files": [
+    "dist",
+    "types"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "engines": {
+    "node": ">= 10"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "prepublishOnly": "npm run build",
+    "test": "uvu -r esm test"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^10.0.0",
+    "brotli-size": "^4.0.0",
+    "esm": "^3.2.25",
+    "rollup": "^2.33.3",
+    "rollup-plugin-terser": "^7.0.2",
+    "uvu": "^0.4.1"
+  }
+}
