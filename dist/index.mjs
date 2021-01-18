@@ -227,7 +227,7 @@ function dotz(canvas, terrain, options){
   let wind = new WindGL(gl, terrain, options);
 
   function frame(){
-    if(ready) wind.draw();
+    wind.draw();
     requestAnimationFrame(frame);
   }
 
@@ -266,6 +266,7 @@ class WindGL{
     this.quadBuffer = createBuffer(gl, new Float32Array([0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1]));
     this.framebuffer = gl.createFramebuffer();
     this.ready = false;
+    this.setTerrain = this.setTerrain.bind(this);
     this.setTerrain(terrain);
     this.resize();
   }
