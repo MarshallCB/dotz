@@ -14,6 +14,8 @@ const terrains = new Map()
  */
 
 export function dotz(canvas, terrain, options){
+  canvas.width = canvas.clientWidth;
+  canvas.height = canvas.clientHeight;
   let gl = canvas.getContext('webgl', {antialiasing: false})
   let wind = new WindGL(gl, terrain, options);
 
@@ -126,7 +128,7 @@ class WindGL{
         createImageBitmap(this).then(res => {
           terrains.set(url, res);
           // first if statement will be true now
-          again()
+          again(url)
         });
       };
     }
