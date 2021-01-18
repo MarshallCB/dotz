@@ -249,6 +249,7 @@ let options_defaults = {
   speed: 0.5,
   dropRate: 0.01,
   dropRateBump: 0.01,
+  particles: 1e5,
   windData: {
     width: 360,
     height: 180,
@@ -273,18 +274,18 @@ class WindGL{
     this.resize();
   }
 
-  get numParticles(){
-    return this._numParticles;
+  get particles(){
+    return this._particles;
   }
 
-  set numParticles(numParticles){
+  set particles(particles){
     var gl = this.gl;
 
     // we create a square texture where each pixel will hold a particle position encoded as RGBA
-    var particleRes = this.particleStateResolution = Math.ceil(Math.sqrt(numParticles));
-    this._numParticles = particleRes * particleRes;
+    var particleRes = this.particleStateResolution = Math.ceil(Math.sqrt(particles));
+    this._particles = particleRes * particleRes;
 
-    var particleState = new Uint8Array(this._numParticles * 4);
+    var particleState = new Uint8Array(this._particles * 4);
     for (var i = 0; i < particleState.length; i++) {
         particleState[i] = Math.floor(Math.random() * 256); // randomize the initial particle positions
     }
@@ -292,8 +293,8 @@ class WindGL{
     this.particleStateTexture0 = createTexture(gl, gl.NEAREST, particleState, particleRes, particleRes);
     this.particleStateTexture1 = createTexture(gl, gl.NEAREST, particleState, particleRes, particleRes);
 
-    var particleIndices = new Float32Array(this._numParticles);
-    for (var i$1 = 0; i$1 < this._numParticles; i$1++) { particleIndices[i$1] = i$1; }
+    var particleIndices = new Float32Array(this._particles);
+    for (var i$1 = 0; i$1 < this._particles; i$1++) { particleIndices[i$1] = i$1; }
     this.particleIndexBuffer = createBuffer(gl, particleIndices);
   }
 
@@ -408,7 +409,7 @@ class WindGL{
     gl.uniform2f(program.u_wind_min, this.windData.uMin, this.windData.vMin);
     gl.uniform2f(program.u_wind_max, this.windData.uMax, this.windData.vMax);
 
-    gl.drawArrays(gl.POINTS, 0, this._numParticles);
+    gl.drawArrays(gl.POINTS, 0, this._particles);
   }
 
   updateParticles() {
