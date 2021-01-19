@@ -27,6 +27,8 @@
   <a href="#Details"><b>Details</b></a>
 </h3>
 
+---
+
 # Usage
 
 [**Edit on CodePen**](https://codepen.io/marshallcb/pen/bGwzZNe)
