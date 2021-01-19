@@ -15,7 +15,9 @@
   </a>
 </div>
 
-<h2 align="center">:construction: Work in progress :construction:</h2>
+<div align="center">
+  <img src="https://github.com/marshallcb/dotz/raw/main/meta/demo.gif" alt="dotz demo" width="600" />
+</div>
 
 ## Example
 
