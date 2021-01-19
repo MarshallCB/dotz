@@ -17,7 +17,9 @@
 <br/>
 
 <div align="center">
-  <img src="https://github.com/marshallcb/dotz/raw/main/meta/demo.gif" alt="dotz demo" width="600" height="338" />
+  <a href="https://codepen.io/marshallcb/pen/bGwzZNe">
+    <img src="https://github.com/marshallcb/dotz/raw/main/meta/demo.gif" alt="dotz demo" width="600" height="338" />
+  </a>
 </div>
 <br/>
 <h3 align="center">
@@ -31,7 +33,7 @@
 
 # Usage
 
-[**Edit on CodePen**](https://codepen.io/marshallcb/pen/bGwzZNe)
+[**Open in CodePen**](https://codepen.io/marshallcb/pen/bGwzZNe)
 ```js
 import { Dotz } from 'https://esm.sh/dotz';
 
