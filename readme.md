@@ -15,19 +15,20 @@
   </a>
 </div>
 <br/>
+
 ---
+
 <div align="center">
   <img src="https://github.com/marshallcb/dotz/raw/main/meta/demo.gif" alt="dotz demo" width="600" />
 </div>
 <br/>
 <br/>
-<div align="center">
+<h3 align="center">
   <a href="#Usage"><b>Usage</b></a> | 
   <a href="#API"><b>API</b></a> | 
   <a href="#Terrains"><b>Terrains</b></a> | 
   <a href="#Details"><b>Details</b></a>
-</div>
----
+</h3>
 
 # Usage
 
