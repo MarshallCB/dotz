@@ -199,16 +199,6 @@ function bindFramebuffer(gl, framebuffer, texture) {
 
 const terrains = new Map();
 
-/**
- * TODO
- * - Make options properties with setters that affect windgl instance
- * - allow for functional images (not only bitmaps)
- * - optimize code usage  / refactor
- * - make it a custom web element component with webreflection loader
- * - Detect motion preferences
- * - Listen for window resize
- */
-
 function polyfill(){
   if (!('createImageBitmap' in window)) {
     window.createImageBitmap = (data) => new Promise((res, rej) => {
@@ -238,23 +228,6 @@ function polyfill(){
   }
 }
 
-function dotz(canvas, terrain, options){
-  polyfill();
-  canvas.width = canvas.clientWidth;
-  canvas.height = canvas.clientHeight;
-  let gl = canvas.getContext('webgl', {antialiasing: false});
-  let wind = new WindGL(gl, terrain, options);
-
-  function frame(){
-    wind.draw();
-    requestAnimationFrame(frame);
-  }
-
-  frame();
-  return wind;
-}
-
-
 let options_defaults = {
   fade: 0.96,
   colors: {
@@ -275,8 +248,14 @@ let options_defaults = {
   }
 };
 
-class WindGL{
-  constructor(gl, terrain, options){
+class Dotz{
+  constructor(canvas, terrain, options){
+
+    polyfill();
+    canvas.width = canvas.clientWidth;
+    canvas.height = canvas.clientHeight;
+
+    let gl = canvas.getContext('webgl', {antialiasing: false});
     this.gl = gl;
     Object.assign(this, options_defaults, options);
     this.drawProgram = createProgram(gl, drawVert, drawFrag);
@@ -286,8 +265,15 @@ class WindGL{
     this.framebuffer = gl.createFramebuffer();
     this.ready = false;
     this.setTerrain = this.setTerrain.bind(this);
+    this.frame = this.frame.bind(this);
     this.setTerrain(terrain);
     this.resize();
+    this.frame();
+  }
+
+  frame(){
+    this.draw();
+    requestAnimationFrame(this.frame);
   }
 
   get particles(){
@@ -466,4 +452,4 @@ class WindGL{
 
 }
 
-export { dotz };
+export { Dotz };

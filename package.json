@@ -1,7 +1,7 @@
 {
   "version": "0.1.4",
   "name": "dotz",
-  "umd:name": "dotz",
+  "umd:name": "Dotz",
   "repository": "MarshallCB/dotz",
   "description": "GPU-accelerated Particle Terrains",
   "keywords": [],
