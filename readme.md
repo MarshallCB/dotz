@@ -17,7 +17,7 @@
 
 <h2 align="center">:construction: Work in progress :construction:</h2>
 
-## [Example](https://codepen.io/marshallcb/pen/bGwzZNe)
+## Example
 
 [**Edit on CodePen**](https://codepen.io/marshallcb/pen/bGwzZNe)
 ```js
@@ -44,6 +44,10 @@ let my_dotz = new Dotz(
 ```
 
 ## API
+
+Coming soon
+
+## Generating Terrains
 
 Coming soon
 
