@@ -16,12 +16,9 @@
 </div>
 <br/>
 
----
-
 <div align="center">
   <img src="https://github.com/marshallcb/dotz/raw/main/meta/demo.gif" alt="dotz demo" width="600" />
 </div>
-<br/>
 <br/>
 <h3 align="center">
   <a href="#Usage"><b>Usage</b></a> | 
