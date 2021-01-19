@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://github.com/marshallcb/dotz/raw/main/meta/dotz.png" alt="dotz" width="100" />
+  <img src="https://github.com/marshallcb/dotz/raw/main/meta/dotz.png" alt="dotz" width="60" />
 </div>
 
 <h1 align="center">dotz</h1>
@@ -20,18 +20,25 @@
 # Example
 
 ```js
-let canvas = document.getElementById('#myCanvas')
-let my_dotz = dotz(canvas, "https://m4r.sh/terrains/spiral.png", { 
-  speed: 0.5,
-  fade: 0.96,
-  particles: 50000,
-  colors: {
-    "0.0": "transparent",
-    "0.2": "#00f",
-    "1.0": "#f00"
+import { dotz } from 'https://esm.sh/dotz';
+
+dotz(
+  // canvas element
+  document.getElementById('#myCanvas'),
+  // URL for terrain image (dudv map)
+  "https://m4r.sh/terrains/spiral.png",
+  // options
+  { 
+    speed: 0.5,
+    fade: 0.96,
+    particles: 4e5,
+    colors: {
+      "0.0": "transparent",
+      "0.2": "#00f",
+      "1.0": "#f00"
+    }
   }
-})
-my_dotz.speed = 1.0;
+)
 ```
 
 ## References

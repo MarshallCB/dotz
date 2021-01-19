@@ -226,6 +226,7 @@ function polyfill(){
         rej("createImageBitmap can't use the given image type");
       }
       const img = new Image();
+      img.crossOrigin = "Anonymous";
       img.onload = function() {
         res(this);
         if (data instanceof Blob) {
@@ -360,6 +361,7 @@ class WindGL{
         });
       };
       windImage.onload = load; 
+      windImage.crossOrigin = "Anonymous";
       windImage.src = url;
       if(windImage.complete) load.call(windImage);
     }
