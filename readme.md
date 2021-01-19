@@ -17,12 +17,13 @@
 
 <h2 align="center">:construction: Work in progress :construction:</h2>
 
-# Example
+## [Example](https://codepen.io/marshallcb/pen/bGwzZNe)
 
+[**Edit on CodePen**](https://codepen.io/marshallcb/pen/bGwzZNe)
 ```js
-import { dotz } from 'https://esm.sh/dotz';
+import { Dotz } from 'https://esm.sh/dotz';
 
-dotz(
+let my_dotz = new Dotz(
   // canvas element
   document.getElementById('#myCanvas'),
   // URL for terrain image (dudv map)
@@ -30,16 +31,21 @@ dotz(
   // options
   { 
     speed: 0.5,
-    fade: 0.96,
+    fade: 0.8,
     particles: 4e5,
     colors: {
       "0.0": "transparent",
-      "0.2": "#00f",
-      "1.0": "#f00"
+      "0.1": "hsl(240,100%, 50%)",
+      "0.5": "hsl(300,100%, 50%)",
+      "1.0": "hsl(60 ,100%, 50%)"
     }
   }
 )
 ```
+
+## API
+
+Coming soon
 
 ## References
 
