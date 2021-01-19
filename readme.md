@@ -16,10 +16,18 @@
 </div>
 
 <div align="center">
+  <a href="#Usage"><b>Usage</b></a> | 
+  <a href="#API"><b>API</b></a> | 
+  <a href="#Terrains"><b>Terrains</b></a> | 
+  <a href="#Details"><b>Details</b></a>
+</div>
+<br/>
+<div align="center">
   <img src="https://github.com/marshallcb/dotz/raw/main/meta/demo.gif" alt="dotz demo" width="600" />
 </div>
+</br>
 
-## Example
+# Usage
 
 [**Edit on CodePen**](https://codepen.io/marshallcb/pen/bGwzZNe)
 ```js
@@ -45,18 +53,22 @@ let my_dotz = new Dotz(
 )
 ```
 
-## API
+# API
 
 Coming soon
 
-## Generating Terrains
+# Terrains
 
 Coming soon
 
-## References
+# Details
+
+Coming soon
+
+# References
 
 Heavily inspired by other code. TODO: add references to blog post and original codebase
 
-## License
+# License
 
 MIT © [Marshall Brandt](https://m4r.sh)
