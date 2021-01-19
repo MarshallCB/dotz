@@ -14,18 +14,20 @@
     <img src="https://img.badgesize.io/MarshallCB/dotz/main/es.js?compression=brotli&color=1A5" alt="download size" />
   </a>
 </div>
-
+<br/>
+---
+<div align="center">
+  <img src="https://github.com/marshallcb/dotz/raw/main/meta/demo.gif" alt="dotz demo" width="600" />
+</div>
+<br/>
+<br/>
 <div align="center">
   <a href="#Usage"><b>Usage</b></a> | 
   <a href="#API"><b>API</b></a> | 
   <a href="#Terrains"><b>Terrains</b></a> | 
   <a href="#Details"><b>Details</b></a>
 </div>
-<br/>
-<div align="center">
-  <img src="https://github.com/marshallcb/dotz/raw/main/meta/demo.gif" alt="dotz demo" width="600" />
-</div>
-</br>
+---
 
 # Usage
 
