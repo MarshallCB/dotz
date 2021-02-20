@@ -73,6 +73,7 @@ export class Dotz{
     this.setTerrain(terrain);
     this.resize();
     this.frame();
+    window.addEventListener('resize', this.resize());
   }
 
   frame(){
