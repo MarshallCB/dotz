@@ -56,9 +56,9 @@ export class Dotz{
   constructor(canvas, terrain, options){
 
     polyfill()
-    canvas.width = canvas.clientWidth;
+    canvas.width = options.width || canvas.clientWidth;
     let prevWidth = canvas.width;
-    canvas.height = canvas.clientHeight;
+    canvas.height = options.height || canvas.clientHeight;
 
     let gl = canvas.getContext('webgl', {antialiasing: false})
     this.gl = gl
@@ -74,11 +74,12 @@ export class Dotz{
     this.setTerrain(terrain);
     this.resize();
     this.frame();
+    if(!options.width || !options.height)
     window.addEventListener('resize', () => {
       let { clientHeight, clientWidth } = canvas
       if(clientHeight !== prevWidth){
-        canvas.width = prevWidth = clientWidth
-        canvas.height = clientHeight
+        canvas.width = prevWidth = options.width || clientWidth
+        canvas.height = options.height || clientHeight
         this.resize()
       }
     });
